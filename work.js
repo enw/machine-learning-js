@@ -54,6 +54,7 @@ var data = [
 /*
   generate metadata about data
   {  
+      fieldNames: [],
       valueLists: { }, 
       valueHashes: { },
       valueCounts: { }
@@ -63,11 +64,13 @@ var _datainfo = {};
 function getMetadata(data) {
     var hash = hashutil(data);
     if (!_datainfo[hash]) {
-	var valueLists = [],
+	var fieldNames = [],
+	    valueLists = [],
 	    valueHashes = [],
 	    valueCounts = [];
 	function insertInfo(key, value) {
 	    if (!valueHashes[key]) {
+		fieldNames.push(key);
 		valueHashes[key] = {};
 		valueLists[key] = [];
 		valueCounts[key] = {};
@@ -85,6 +88,7 @@ function getMetadata(data) {
 	    });
 	
 	_datainfo[hash] = {
+	    fieldNames: fieldNames,
 	    valueLists: valueLists,
 	    valueHashes: valueHashes,
 	    valueCounts: valueCounts
@@ -98,10 +102,10 @@ function getMetadata(data) {
 
 // entropy of data for a given field
 // -E p(x) log2 p(x)
-function entropy(data, entropyField) {
+function entropy(data, field) {
     var info = getMetadata(data);  // data info
-    var values = info.valueLists[entropyField];
-    var valcounts = info.valueCounts[entropyField];
+    var values = info.valueLists[field];
+    var valcounts = info.valueCounts[field];
 
     var entropy = 0;
     values.forEach(function(val) {
@@ -140,10 +144,28 @@ function expectedEntropy(data, decisionField, entropyField) {
 }
 
 // make decision tree
-function makeDT(data, decisionField) {
+function getNextDecision(data, decisionField) {
     // compute entropy of dataset
     var _entropy = entropy(data, decisionField);
-    return _entropy;
+    var info = getMetadata(data),
+	fieldNames = info.fieldNames;
+    
+    // compute entropy for choosing each field & pick the field that minimizes entropy
+    var minimizingField;
+    var _entropy=Number.MAX_VALUE; // start with huge entropy
+    fieldNames.forEach(function(fieldName) {
+	    if (fieldName == decisionField) return; // skip decisionField
+	    var _expectedEntropy = expectedEntropy(data, fieldName, decisionField);
+	    if (_expectedEntropy < _entropy) {
+		minimizingField=fieldName;
+		_entropy = _expectedEntropy;
+	    }
+	});
+    
+    //var groupedData = choose(data, decisionField);
+
+    //    return _entropy;
+    return {selectOn:minimizingField, entropy:_entropy};
 }
 
 //console.log('entropy', entropy(data, 'play'));
@@ -155,4 +177,4 @@ function makeDT(data, decisionField) {
 //console.log('group', choose(data, 'humidity'));
 //console.log('expectedEntropy', expectedEntropy(data, 'windy', 'play'));
 
-console.log('dt', makeDT(data, 'play'));
+console.log('dt', getNextDecision(data, 'play'));
