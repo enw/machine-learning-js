@@ -166,6 +166,44 @@ function getNextDecision(data, labelField) {
     return {selectOn:minimizingField, entropy:_entropy};
 }
 
+// build decision tree with ID3 algorithm
+// assume attributes are discreet
+// choose attribute w/highest information gain
+// create branch for each value of attribute
+// partition examples
+// repeate with remaining attributes
+function buildDT(data, labelField) {
+    // helper
+    function getNumberOfLabels() {
+	return getMetadata(data).valueLists[labelField].length;
+    }
+
+    // stop when all examples have same label or no examples left
+    //    if ((getNumberOfLabels()==1)) || data.length == 0) return "DONE";
+    if (getNumberOfLabels()==1) return getMetadata(data).valueLists[labelField][0];
+    if (data.length == 0) return "DONE";
+    var selectField = getNextDecision(data, labelField).selectOn;
+    
+    function makeStep(selectField) {
+	return {selectOn: selectField, branches:[]};
+    };
+
+    var dt = makeStep(selectField);
+
+    function addBranch(tree) {
+	dt.branches.push(tree);
+    }
+    //    console.log('selectField', selectField, choose(data, selectField).length);    
+
+    choose(data, selectField).forEach(function(branch) {
+	    //	    console.log('branch', branch);
+	    addBranch(buildDT(branch, labelField));
+	});
+
+    //    var info = getMetadata(data);
+    return dt;
+}
+
 //console.log('entropy', entropy(data, 'play'));
 //console.log('choose', choose(data, 'outlook'));
 //console.log('choose', choose(data, 'temperature'));
@@ -174,6 +212,9 @@ function getNextDecision(data, labelField) {
 //console.log('expectedEntropy', expectedEntropy(data, 'humidity', 'play'));
 //console.log('group', choose(data, 'humidity'));
 //console.log('expectedEntropy', expectedEntropy(data, 'windy', 'play'));
-console.log('entropy in dataset is %d', entropy(data, 'play'));
-var decision = getNextDecision(data, 'play');
-console.log('if you select on the %s field, entropy decreases to %d', decision.selectOn, decision.entropy);
+
+//console.log('entropy in dataset is %d', entropy(data, 'play'));
+//var decision = getNextDecision(data, 'play');
+//console.log('if you select on the %s field, entropy decreases to %d', decision.selectOn, decision.entropy);
+
+console.log(JSON.stringify(buildDT(data, 'play')));
