@@ -100,12 +100,12 @@ function getMetadata(data) {
 
 //console.log(getMetadata(data));
 
-// entropy of data for a given field
+// entropy of data for a given @labelField
 // -E p(x) log2 p(x)
-function entropy(data, field) {
+function entropy(data, labelField) {
     var info = getMetadata(data);  // data info
-    var values = info.valueLists[field];
-    var valcounts = info.valueCounts[field];
+    var values = info.valueLists[labelField];
+    var valcounts = info.valueCounts[labelField];
 
     var entropy = 0;
     values.forEach(function(val) {
@@ -131,22 +131,22 @@ function choose(data, selectField) {
     return ret;
 }
 // expected entropy for making decision split on a particular field 
-function expectedEntropy(data, decisionField, entropyField) {
+function expectedEntropy(data, decisionField, labelField) {
     var info = getMetadata(data);
-    var values = info.valueLists[entropyField];
+    var values = info.valueLists[labelField];
     var groupedData = choose(data, decisionField);
   
     var _entropy = 0;
     groupedData.forEach(function (rows) {
-	    _entropy += rows.length/data.length*entropy(rows, entropyField);
+	    _entropy += rows.length/data.length*entropy(rows, labelField);
 	});
     return _entropy;
 }
 
 // make decision tree
-function getNextDecision(data, decisionField) {
+function getNextDecision(data, labelField) {
     // compute entropy of dataset
-    var _entropy = entropy(data, decisionField);
+    var _entropy = entropy(data, labelField);
     var info = getMetadata(data),
 	fieldNames = info.fieldNames;
     
@@ -154,16 +154,14 @@ function getNextDecision(data, decisionField) {
     var minimizingField;
     var _entropy=Number.MAX_VALUE; // start with huge entropy
     fieldNames.forEach(function(fieldName) {
-	    if (fieldName == decisionField) return; // skip decisionField
-	    var _expectedEntropy = expectedEntropy(data, fieldName, decisionField);
+	    if (fieldName == labelField) return; // skip labelField
+	    var _expectedEntropy = expectedEntropy(data, fieldName, labelField);
 	    if (_expectedEntropy < _entropy) {
 		minimizingField=fieldName;
 		_entropy = _expectedEntropy;
 	    }
 	});
     
-    //var groupedData = choose(data, decisionField);
-
     //    return _entropy;
     return {selectOn:minimizingField, entropy:_entropy};
 }
@@ -176,5 +174,6 @@ function getNextDecision(data, decisionField) {
 //console.log('expectedEntropy', expectedEntropy(data, 'humidity', 'play'));
 //console.log('group', choose(data, 'humidity'));
 //console.log('expectedEntropy', expectedEntropy(data, 'windy', 'play'));
-
-console.log('dt', getNextDecision(data, 'play'));
+console.log('entropy in dataset is %d', entropy(data, 'play'));
+var decision = getNextDecision(data, 'play');
+console.log('if you select on the %s field, entropy decreases to %d', decision.selectOn, decision.entropy);
