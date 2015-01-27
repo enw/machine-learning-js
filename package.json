@@ -1,7 +1,7 @@
 {
-  "name": "DataSci",
+  "name": "MachineLearningJS",
   "version": "1.0.0",
-  "description": "NodeJS Data Science explorations",
+  "description": "NodeJS Machine Learning implementations",
   "main": "DecisionTree.js",
   "scripts": {
     "test": ". test.sh"
