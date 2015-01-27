@@ -1,0 +1,11 @@
+{
+  "name": "DataSci",
+  "version": "1.0.0",
+  "description": "NodeJS Data Science explorations",
+  "main": "DecisionTree.js",
+  "scripts": {
+    "test": ". test.sh"
+  },
+  "author": "Elliot Winard <hello@elliotwinard.com>",
+  "license": "ISC"
+}

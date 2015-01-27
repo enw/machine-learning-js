@@ -2,7 +2,7 @@
 // https://class.coursera.org/datasci-002/lecture/149
 
 // HELPER
-var hashutil = require('./hashutil');
+var hashutil = require('./ObjectHash');
 
 //
 // CONSTANTS

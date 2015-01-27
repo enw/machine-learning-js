@@ -1,2 +1,2 @@
 #!/bin/sh
-node --harmony work.js
+node --harmony test.js
