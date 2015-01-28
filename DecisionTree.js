@@ -4,50 +4,24 @@
 // HELPER
 var hashutil = require('./ObjectHash');
 
-//
-// CONSTANTS
-//
-
-// OUTLOOK
-var OVERCAST=0,
-    RAINY=1,
-    SUNNY=2,
-
-    // TEMPERATURE
-    COOL=0,
-    HOT=1,
-    MILD=2,
-
-    // HUMIDITY
-    NORMAL=0,
-    HIGH=1,
-    
-    // windy
-    TRUE=0,
-    FALSE=1,
-    
-    // play
-    YES=0,
-    NO=1;
-
 // data 
 var data = [
-	    { outlook:OVERCAST, temperature:COOL, humidity:NORMAL, windy:TRUE, play:YES},
-	    { outlook:OVERCAST, temperature:HOT, humidity:HIGH, windy:FALSE, play:YES},
-	    { outlook:OVERCAST, temperature:HOT, humidity:NORMAL, windy:FALSE, play:YES},
-	    { outlook:OVERCAST, temperature:MILD, humidity:HIGH, windy:TRUE, play:YES},
+	    { outlook:"overcast", temperature:"cool", humidity:"normal", windy:"true", play:"yes"},
+	    { outlook:"overcast", temperature:"hot", humidity:"high", windy:"false", play:"yes"},
+	    { outlook:"overcast", temperature:"hot", humidity:"normal", windy:"false", play:"yes"},
+	    { outlook:"overcast", temperature:"mild", humidity:"high", windy:"true", play:"yes"},
 
-	    { outlook:RAINY, temperature:COOL, humidity:NORMAL, windy:TRUE, play:NO},
-	    { outlook:RAINY, temperature:MILD, humidity:HIGH, windy:TRUE, play:NO},
-	    { outlook:RAINY, temperature:COOL, humidity:NORMAL, windy:FALSE, play:YES},
-	    { outlook:RAINY, temperature:MILD, humidity:HIGH, windy:FALSE, play:YES},
-	    { outlook:RAINY, temperature:MILD, humidity:NORMAL, windy:FALSE, play:YES},
+	    { outlook:"rainy", temperature:"cool", humidity:"normal", windy:"true", play:"no"},
+	    { outlook:"rainy", temperature:"mild", humidity:"high", windy:"true", play:"no"},
+	    { outlook:"rainy", temperature:"cool", humidity:"normal", windy:"false", play:"yes"},
+	    { outlook:"rainy", temperature:"mild", humidity:"high", windy:"false", play:"yes"},
+	    { outlook:"rainy", temperature:"mild", humidity:"normal", windy:"false", play:"yes"},
 
-	    { outlook:SUNNY, temperature:HOT, humidity:HIGH, windy:FALSE, play:NO},
-	    { outlook:SUNNY, temperature:HOT, humidity:HIGH, windy:TRUE, play:NO},
-	    { outlook:SUNNY, temperature:MILD, humidity:HIGH, windy:FALSE, play:NO},
-	    { outlook:SUNNY, temperature:COOL, humidity:NORMAL, windy:FALSE, play:YES},
-	    { outlook:SUNNY, temperature:MILD, humidity:NORMAL, windy:TRUE, play:YES}
+	    { outlook:"sunny", temperature:"hot", humidity:"high", windy:"false", play:"no"},
+	    { outlook:"sunny", temperature:"hot", humidity:"high", windy:"true", play:"no"},
+	    { outlook:"sunny", temperature:"mild", humidity:"high", windy:"false", play:"no"},
+	    { outlook:"sunny", temperature:"cool", humidity:"normal", windy:"false", play:"yes"},
+	    { outlook:"sunny", temperature:"mild", humidity:"normal", windy:"true", play:"yes"}
 
 	    ];
 
