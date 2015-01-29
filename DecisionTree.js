@@ -137,7 +137,7 @@ function getNextDecision(data, labelField) {
 	});
     
     //    return _entropy;
-    return {selectOn:minimizingField, entropy:_entropy};
+    return {if:minimizingField, entropy:_entropy};
 }
 
 // build decision tree with ID3 algorithm
@@ -146,20 +146,23 @@ function getNextDecision(data, labelField) {
 // create branch for each value of attribute
 // partition examples
 // repeate with remaining attributes
-function buildDT(data, labelField) {
+function buildDT(data, labelField, selectValue) {
+
     // helper
     function getNumberOfLabels() {
 	return getMetadata(data).valueLists[labelField].length;
     }
 
     // stop when all examples have same label or no examples left
-    //    if ((getNumberOfLabels()==1)) || data.length == 0) return "DONE";
-    if (getNumberOfLabels()==1) return getMetadata(data).valueLists[labelField][0];
+    if (getNumberOfLabels()==1) return {equals:selectValue, labelValue:getMetadata(data).valueLists[labelField][0]};
     if (data.length == 0) return "DONE";
-    var selectField = getNextDecision(data, labelField).selectOn;
+    var selectField = getNextDecision(data, labelField).if;
     
     function makeStep(selectField) {
-	return {selectOn: selectField, branches:[]};
+	//console.log('data', selectField, data);
+	var ret = {if: selectField, branches:[]};
+	if (selectValue) ret.equals = selectValue;
+	return ret;
     };
 
     var dt = makeStep(selectField);
@@ -170,8 +173,8 @@ function buildDT(data, labelField) {
     //    console.log('selectField', selectField, choose(data, selectField).length);    
 
     choose(data, selectField).forEach(function(branch) {
-	    //	    console.log('branch', branch);
-	    addBranch(buildDT(branch, labelField));
+	    //	    console.log('branch', selectField, branch[0][selectField]);
+	    addBranch(buildDT(branch, labelField, branch[0][selectField]));
 	});
 
     //    var info = getMetadata(data);
