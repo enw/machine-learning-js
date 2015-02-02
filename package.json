@@ -4,7 +4,7 @@
   "description": "NodeJS Machine Learning implementations",
   "main": "DecisionTree.js",
   "scripts": {
-    "test": ". test.sh"
+    "test": "node --harmony test/test.js"
   },
   "author": "Elliot Winard <hello@elliotwinard.com>",
   "license": "ISC"
